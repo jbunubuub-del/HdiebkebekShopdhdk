@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: xrocket-shop-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python xrocket_shop_v4_pg.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: XROCKET_TOKEN
+        sync: false
+      - key: CRYPTOBOT_TOKEN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
