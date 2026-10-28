@@ -1,10 +1,12 @@
 import os
 import time
+import threading
 import requests
 import psycopg2
 import psycopg2.extras
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # ==========================================
 # CONFIGURATION
@@ -978,6 +980,21 @@ if __name__ == "__main__":
         apihelper.READ_TIMEOUT = 60
     except Exception:
         pass
+
+    # Маленький веб-сервер чтобы Render не останавливал сервис
+    class HealthHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"OK")
+        def log_message(self, format, *args):
+            pass  # Не спамим логи
+
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), HealthHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    print(f"🌐 Веб-сервер запущен на порту {port}")
 
     print("✅ Бот запущен. Подключение к PostgreSQL (Supabase) установлено.")
     while True:
