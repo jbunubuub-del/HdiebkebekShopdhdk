@@ -1,7 +1,0 @@
-[build]
-builder = "NIXPACKS"
-
-[deploy]
-startCommand = "python xrocket_shop_fixed_v3.py"
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
